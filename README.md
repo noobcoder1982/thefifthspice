@@ -45,7 +45,6 @@ The project includes an animated landing page, interactive menu flow, booking/co
 No package manager or build step is required.
 
 1. Clone the repository:
-   - Repository: `noobcoder1982/thefifthspice`
    ```bash
    git clone https://github.com/noobcoder1982/thefifthspice.git
    cd thefifthspice
@@ -97,7 +96,8 @@ Contributions are welcome.
 
 ## 📄 License
 
-No license file is currently present in this repository, so no explicit license is specified.
+No license file is currently present in this repository, so no explicit license is specified.  
+For reuse or distribution permissions, contact the repository owner.
 
 ## 👤 Contact / Credits
 
