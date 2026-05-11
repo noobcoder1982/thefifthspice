@@ -32,6 +32,7 @@ The project includes an animated landing page, interactive menu flow, booking/co
 - **HTML5**
 - **CSS3**
 - **JavaScript (ES6, no framework)**
+- **Python** (optional utility scripts for repository maintenance/refactors)
 
 ### External libraries/CDNs used in the project
 - **GSAP** (`gsap`, `SplitText`, `ScrollTrigger`, `Flip`) for animations
@@ -44,6 +45,7 @@ The project includes an animated landing page, interactive menu flow, booking/co
 No package manager or build step is required.
 
 1. Clone the repository:
+   - Repository: `noobcoder1982/thefifthspice`
    ```bash
    git clone https://github.com/noobcoder1982/thefifthspice.git
    cd thefifthspice
@@ -78,10 +80,10 @@ thefifthspice/
 ├── script.js         # UI behavior, localStorage, checkout/tracking logic
 ├── Images/           # Local image assets used by the site
 ├── fontfiles/        # Local custom font files
-├── script.py
-├── restructure.py
-├── rewrite_all.py
-└── update_script.py  # Utility/refactor scripts used during HTML/JS updates
+├── script.py         # Optional utility script
+├── restructure.py    # Optional utility script
+├── rewrite_all.py    # Optional utility script
+└── update_script.py  # Optional utility script
 ```
 
 ## 🤝 Contributing
