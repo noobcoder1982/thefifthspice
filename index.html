@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Fifth Spice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Modals -->
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" aria-label="Close">&times;</span>
+      <h2>Login</h2>
+      <form id="loginForm" autocomplete="off">
+        <div class="form-group">
+          <input type="email" id="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-gold w-100">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Contact Modal -->
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <span class="close" aria-label="Close">&times;</span>
+      <h2>Send us a Message</h2>
+      <form id="contactForm" autocomplete="off">
+        <div class="form-group"><input type="text" placeholder="Your name" required></div>
+        <div class="form-group"><input type="email" placeholder="Your Email" required></div>
+        <div class="form-group"><input type="text" placeholder="Subject" required></div>
+        <div class="form-group"><textarea placeholder="Your Message" rows="5" required></textarea></div>
+        <button type="submit" class="btn btn-gold w-100">Submit Contact Form</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Full Screen Sliding Menu -->
+  <div id="fullScreenMenu" class="full-screen-menu">
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+    <div class="menu-panel" id="menuPanel">
+      <div class="menu-left-half">
+        <div class="menu-nav-top">
+          <button id="closeFullMenu" class="close-menu-btn">CLOSE</button>
+          <ul class="nav-right menu-nav-right" id="sideMenuNav">
+            <li><a href="#" class="strikethrough-link active-strike side-tab-btn" data-target="tab-menu">MENU</a></li>
+            <li><a href="#" class="strikethrough-link side-tab-btn" data-target="tab-bookings">BOOKINGS</a></li>
+            <li><a href="#" class="strikethrough-link side-tab-btn" data-target="tab-cart">CART(<span class="cartCountDisplay">0</span>)</a></li>
+            <li><a href="#" class="strikethrough-link side-tab-btn" data-target="tab-fav">FAV(<span class="favoritesCountDisplay">0</span>)</a></li>
+          </ul>
+        </div>
+        
+        <div class="side-tabs-container">
+          <!-- MENU TAB -->
+          <div id="tab-menu" class="side-tab-content" style="display:block;">
+            <h2 class="giant-menu-text">Menu</h2>
+            <div class="menu-items-container">
+              <h3 class="menu-category">BURGERS</h3>
+              <ul class="menu-list">
+                <li class="menu-item-line"><div class="menu-item-header"><span class="item-name">DOUBLE CHEESE</span><span class="item-dots"></span><span class="item-price">7.80</span></div><div class="menu-item-desc">Double steak patty, double American cheese, relish, mustard and gherkins.</div></li>
+                <li class="menu-item-line"><div class="menu-item-header"><span class="item-name">BIG CHEESE</span><span class="item-dots"></span><span class="item-price">9.50</span></div><div class="menu-item-desc">Double steak patty, double American cheese, Swiss and Monterey jack cheese, baconnaise top and bottom.</div></li>
+                <li class="menu-item-line"><div class="menu-item-header"><span class="item-name">THE BIG G</span><span class="item-dots"></span><span class="item-price">10.50</span></div><div class="menu-item-desc">Double steak patty, double American cheese, house made garlic mayo, sweet pickled red onions and iceberg lettuce.</div></li>
+              </ul>
+              <h3 class="menu-category" style="margin-top: 2rem;">MAINS</h3>
+            </div>
+          </div>
+
+          <!-- BOOKINGS TAB -->
+          <div id="tab-bookings" class="side-tab-content" style="display:none;">
+            <h2 class="giant-menu-text">Bookings</h2>
+            <div class="menu-items-container">
+              <form id="ReservationForm" autocomplete="off" class="dark-form">
+                <div class="form-row">
+                  <div class="form-group"><input type="text" placeholder="Your name" required></div>
+                  <div class="form-group"><input type="email" placeholder="Your Email" required></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><input type="tel" placeholder="Phone Number" required></div>
+                  <div class="form-group">
+                    <select required>
+                      <option value="" disabled selected>Select number of guests</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><input type="date" required></div>
+                  <div class="form-group"><input type="time" required></div>
+                </div>
+                <button type="submit" class="btn btn-gold w-100">Make Reservation</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- CART TAB -->
+          <div id="tab-cart" class="side-tab-content" style="display:none;">
+            <h2 class="giant-menu-text">Cart</h2>
+            <div class="menu-items-container" style="width: 100%; max-width: 600px; margin: 0 auto;">
+              
+              <!-- Step 1: Cart Items -->
+              <div id="cart-step-items" class="cart-step active-step">
+                <div id="cartItems" class="cart-items" style="max-height: 40vh; overflow-y: auto; padding-right: 1rem;"></div>
+                <div class="cart-footer" style="padding-top: 2rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                  <div class="cart-total-row" style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; font-family: var(--font-mono); font-size: 1.2rem;">
+                    <span>Total:</span>
+                    <span style="color:var(--gold);">₹<span id="cartTotal">0.00</span></span>
+                  </div>
+                  <button class="btn btn-gold w-100" id="btn-proceed-checkout">Proceed To Checkout</button>
+                </div>
+              </div>
+
+              <!-- Step 2: Checkout Details -->
+              <div id="cart-step-checkout" class="cart-step" style="display:none;">
+                <h3 style="font-family: var(--font-serif); margin-bottom: 1.5rem;">Delivery Details</h3>
+                <form id="checkoutForm" class="dark-form">
+                  <div class="form-group"><input type="text" id="checkoutName" placeholder="Full Name" required></div>
+                  <div class="form-group"><textarea id="checkoutAddress" placeholder="Delivery Address" rows="3" required></textarea></div>
+                  <div class="form-group"><input type="tel" id="checkoutPhone" placeholder="Phone Number" required></div>
+                  <button type="submit" class="btn btn-gold w-100">Continue to Payment</button>
+                  <button type="button" class="btn btn-outline w-100" id="btn-back-cart" style="margin-top: 1rem;">Back to Cart</button>
+                </form>
+              </div>
+
+              <!-- Step 3: Payment -->
+              <div id="cart-step-payment" class="cart-step" style="display:none;">
+                <h3 style="font-family: var(--font-serif); margin-bottom: 1.5rem;">Secure Payment</h3>
+                <div class="credit-card-mockup" style="background: #222; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #333;">
+                  <div style="font-family: var(--font-mono); color: #ccc; margin-bottom: 1rem;">CARD DETAILS</div>
+                  <input type="text" placeholder="Card Number (e.g. 4111...)" class="w-100" style="background: #111; color: white; border: 1px solid #444; padding: 0.8rem; margin-bottom: 0.5rem;" required>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" placeholder="MM/YY" style="background: #111; color: white; border: 1px solid #444; padding: 0.8rem; width: 50%;" required>
+                    <input type="text" placeholder="CVC" style="background: #111; color: white; border: 1px solid #444; padding: 0.8rem; width: 50%;" required>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-gold w-100" id="btn-pay-now">Pay ₹<span id="payTotal">0.00</span></button>
+                <button type="button" class="btn btn-outline w-100" id="btn-back-checkout" style="margin-top: 1rem;">Back to Details</button>
+              </div>
+
+              <!-- Step 4: Processing -->
+              <div id="cart-step-processing" class="cart-step" style="display:none; text-align: center; padding: 3rem 0;">
+                <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem;"></i>
+                <h3 style="font-family: var(--font-serif);">Processing Payment...</h3>
+                <p style="color: #888;">Please do not close this window.</p>
+              </div>
+
+              <!-- Step 5: Success & Invoice -->
+              <div id="cart-step-success" class="cart-step" style="display:none; text-align: center;">
+                <i class="fas fa-check-circle" style="font-size: 4rem; color: #27ae60; margin-bottom: 1rem;"></i>
+                <h2 style="font-family: 'Chalga', serif; color: var(--gold); margin-bottom: 0.5rem;">Payment Successful</h2>
+                <p style="color: #aaa; margin-bottom: 2rem;">Your order has been placed.</p>
+                
+                <div class="receipt-printer">
+                  <div class="receipt-slot"></div>
+                  <div id="invoice-content" class="receipt-paper">
+                    <div style="text-align: center; margin-bottom: 1rem; border-bottom: 1px dashed #000; padding-bottom: 1rem;">
+                      <h3 style="font-family: 'Chalga', serif; font-size: 1.5rem; margin-bottom: 0.5rem;">The Fifth Spice</h3>
+                      <p>203 Venice Blvd, CA 90291</p>
+                      <p>Invoice #<span id="invoiceNumber">10294</span></p>
+                    </div>
+                    <div id="invoice-items" style="margin-bottom: 1rem; border-bottom: 1px dashed #000; padding-bottom: 1rem;">
+                      <!-- Items injected here -->
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem;">
+                      <span>Total Paid:</span>
+                      <span>₹<span id="invoiceTotal">0.00</span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                  <button type="button" class="btn btn-outline w-100" id="btn-download-invoice"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                  <button type="button" class="btn btn-gold w-100" id="btn-track-order">Track Order <i class="fas fa-arrow-right"></i></button>
+                </div>
+              </div>
+
+              <!-- Step 6: Progression Pathway -->
+              <div id="cart-step-tracking" class="cart-step" style="display:none;">
+                <h3 style="font-family: var(--font-serif); margin-bottom: 2rem; text-align: center;">Order Status</h3>
+                
+                <div class="tracking-pathway">
+                  <div class="track-node active" id="track-node-1">
+                    <div class="track-icon"><i class="fas fa-fire"></i></div>
+                    <div class="track-text">Kitchen Preparing</div>
+                  </div>
+                  <div class="track-line" id="track-line-1"></div>
+                  <div class="track-node" id="track-node-2">
+                    <div class="track-icon"><i class="fas fa-box"></i></div>
+                    <div class="track-text">Packing Order</div>
+                  </div>
+                  <div class="track-line" id="track-line-2"></div>
+                  <div class="track-node" id="track-node-3">
+                    <div class="track-icon"><i class="fas fa-motorcycle"></i></div>
+                    <div class="track-text">Out for Delivery</div>
+                  </div>
+                  <div class="track-line" id="track-line-3"></div>
+                  <div class="track-node" id="track-node-4">
+                    <div class="track-icon"><i class="fas fa-home"></i></div>
+                    <div class="track-text">Delivered</div>
+                  </div>
+                </div>
+                
+                <button type="button" class="btn btn-outline w-100" id="btn-new-order" style="margin-top: 3rem;">Place Another Order</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- FAV TAB -->
+          <div id="tab-fav" class="side-tab-content" style="display:none;">
+            <h2 class="giant-menu-text">Favorites</h2>
+            <div class="menu-items-container" style="width: 100%;">
+              <div id="favoritesList" class="favorites-list" style="max-height: 50vh; overflow-y: auto; padding-right: 1rem;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="menu-right-half">
+        <div class="menu-image-container">
+          <img src="https://i.pinimg.com/1200x/6a/cc/f3/6accf3cefbe7f9779d151e3696018990.jpg" alt="Menu Burger" id="menuImage">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Landing Page Hero -->
+  <section id="Home" class="hero-new">
+    <div class="video-bg">
+      <video autoplay loop muted playsinline>
+         <!-- Using a generic burger video, falling back to CSS-animated image -->
+         <source src="https://assets.mixkit.co/videos/preview/mixkit-burger-rotating-in-a-dark-background-42173-large.mp4" type="video/mp4">
+         <img src="Images/exploded_burger.png" alt="Exploded Burger">
+      </video>
+    </div>
+    
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content-wrapper">
+      <nav class="hero-nav">
+        <div class="nav-left">
+          <div class="nav-logo">
+            <span class="nav-logo-top">The Fifth</span>
+            <span class="nav-logo-bottom">SPICE</span>
+            <div class="nav-logo-scan-line"></div>
+          </div>
+        </div>
+        <ul class="nav-right">
+          <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-menu">MENU</a></li>
+          <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-bookings">BOOKINGS</a></li>
+          <li><a href="#About" class="strikethrough-link">ABOUT</a></li>
+          <li><a href="#Contact" class="strikethrough-link" onclick="document.getElementById('openContactModal').click(); return false;">CONTACT</a></li>
+          <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-cart">CART(<span class="cartCountDisplay">0</span>)</a></li>
+          <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-fav">FAV(<span class="favoritesCountDisplay">0</span>)</a></li>
+          <li><a href="#" class="strikethrough-link" id="loginBtn">LOGIN</a></li>
+        </ul>
+      </nav>
+
+      <div class="hero-center">
+        <h1 class="main-title fade-in">
+          <span class="title-top">The Fifth</span>
+          <span class="title-bottom">SPICE</span>
+        </h1>
+      </div>
+
+      <div class="hero-footer fade-in">
+        <div>203 VENICE BLVD, CA 90291, USA</div>
+        <div>+1 310-823-5396</div>
+        <div>EAT@THEFIFTHSPICE.COM</div>
+        <div class="socials">
+          <a href="#" class="strikethrough-link">TW</a>
+          <a href="#" class="strikethrough-link">IN</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Dishes Section -->
+  <section id="Menu" class="menu-section">
+    <div class="menu-container">
+      <div class="section-header fade-in">
+        <span class="subtitle">Our Popular</span>
+        <h2>Dishes</h2>
+      </div>
+
+      <div class="dishes-grid" id="dishes-container">
+        <!-- Dish 1 -->
+        <div class="dish-card fade-in">
+          <div class="dish-image">
+            <img src="https://i.pinimg.com/736x/27/88/fd/2788fdeb927d95747176b885dbdfdd84.jpg" alt="Tandoori Chicken" loading="lazy">
+            <button class="favorite-btn" data-name="Tandoori Chicken"><i class="fas fa-heart"></i></button>
+            <div class="rating-badge">
+              (5.6k) <i class="fa fa-star" style="color: #FFD700;"></i>
+            </div>
+          </div>
+          <div class="dish-info">
+            <h3 class="dish-name">Tandoori Chicken</h3>
+            <p class="dish-description">Classic Indian starter, smoky and spicy from the tandoor.</p>
+            <div class="dish-footer">
+              <span class="dish-price">₹280</span>
+              <button class="add-to-cart-btn" data-name="Tandoori Chicken" data-price="280">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dish 2 -->
+        <div class="dish-card fade-in">
+          <div class="dish-image">
+            <img src="https://i.pinimg.com/1200x/f8/c3/3a/f8c33a8c569571fc7c964d2157530041.jpg" alt="Shawarma" loading="lazy">
+            <button class="favorite-btn" data-name="Shawarma"><i class="fas fa-heart"></i></button>
+            <div class="rating-badge">
+              (4.2k) <i class="fa fa-star" style="color: #FFD700;"></i>
+            </div>
+          </div>
+          <div class="dish-info">
+            <h3 class="dish-name">Shawarma</h3>
+            <p class="dish-description">A flavorful street-style roll packed with bold spices and freshness.</p>
+            <div class="dish-footer">
+              <span class="dish-price">₹160</span>
+              <button class="add-to-cart-btn" data-name="Shawarma" data-price="160">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dish 3 -->
+        <div class="dish-card fade-in">
+          <div class="dish-image">
+            <img src="https://i.pinimg.com/736x/b0/a0/de/b0a0de527832a0e2cc6d57bfdcf09808.jpg" alt="Fish Fry" loading="lazy">
+            <button class="favorite-btn" data-name="Fish Fry"><i class="fas fa-heart"></i></button>
+            <div class="rating-badge">
+              (3.9k) <i class="fa fa-star" style="color: #FFD700;"></i>
+            </div>
+          </div>
+          <div class="dish-info">
+            <h3 class="dish-name">Fish Fry</h3>
+            <p class="dish-description">Fresh fish marinated in spices, coated lightly, and shallow or deep-fried to a crispy golden perfection.</p>
+            <div class="dish-footer">
+              <span class="dish-price">₹280</span>
+              <button class="add-to-cart-btn" data-name="Fish Fry" data-price="280">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- About Section -->
+  <section id="About" class="about">
+    <div class="about-container">
+      <div class="about-text fade-in">
+        <span class="subtitle">About Our</span>
+        <h2>Restaurant</h2>
+        <p>Welcome to The Fifth Spice, where culinary excellence meets exceptional service. Since 2015, we have been dedicated to providing our guests with an unforgettable dining experience.</p>
+        <p>Our passionate chefs combine traditional techniques with modern innovation, creating dishes that celebrate both local ingredients and international flavours. Every meal is crafted with precision, care, and a commitment to quality that you can taste in every bite.</p>
+        <p>From intimate dinners to special celebrations, we provide the perfect ambiance for any occasion. Come and discover why food lovers choose The Fifth Spice as their favorite dining destination.</p>
+      </div>
+      <div class="about-images fade-in">
+        <img src="https://i.pinimg.com/736x/3c/ea/04/3cea04f851d3ab84a46cc878d9911820.jpg" alt="About Us Image" class="about-img" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services">
+    <div class="menu-container">
+      <div class="section-header fade-in" style="margin-bottom: 4rem;">
+        <span class="subtitle">Our Experience</span>
+        <h2>Services</h2>
+      </div>
+      <div class="services-grid">
+        <div class="services-card fade-in">
+          <span class="service-num">01</span>
+          <div class="service-divider"></div>
+          <h3 class="service-title">Fine Dine-In</h3>
+          <p class="service-desc">Immerse yourself in a moody, candle-lit, cozy culinary atmosphere coupled with our signature hospitality.</p>
+        </div>
+        <div class="services-card fade-in">
+          <span class="service-num">02</span>
+          <div class="service-divider"></div>
+          <h3 class="service-title">Bespoke Catering</h3>
+          <p class="service-desc">Bring the culinary theater of The Fifth Spice to your private celebrations and custom curated events.</p>
+        </div>
+        <div class="services-card fade-in">
+          <span class="service-num">03</span>
+          <div class="service-divider"></div>
+          <h3 class="service-title">Express Delivery</h3>
+          <p class="service-desc">Savor our masterfully prepared dishes in the ultimate comfort of your own space, packed to absolute perfection.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reservation Split Section -->
+  <section id="Reservation" class="reservation-cta fade-in">
+    <div class="reservation-split-container">
+      <div class="reservation-image-column">
+        <div class="reservation-img-wrapper">
+          <img src="https://i.pinimg.com/1200x/2e/1a/0d/2e1a0d8e8b233a04fd90b8e7df072cfa.jpg" alt="Dining Table Experience" loading="lazy">
+          <div class="reservation-img-overlay"></div>
+        </div>
+      </div>
+      <div class="reservation-content-column">
+        <span class="subtitle">Experience The Fifth Spice</span>
+        <h2>Secure Your Table</h2>
+        
+        <p class="reservation-editorial-desc">
+          due to high demand and our intimate, custom dining experience, we highly recommend booking your table in advance. walk-ins are seated subject to availability.
+        </p>
+        
+        <div class="reservation-details-grid">
+          <div class="res-detail-item">
+            <h4>Address</h4>
+            <p>203 Venice Blvd,<br>CA 90291, USA</p>
+          </div>
+          <div class="res-detail-item">
+            <h4>Inquiries</h4>
+            <p>+1 310-823-5396<br>eat@thefifthspice.com</p>
+          </div>
+        </div>
+        
+        <div class="res-buttons-group">
+          <button class="btn btn-gold hero-side-trigger" data-target="tab-bookings">Book A Table</button>
+          <button class="btn btn-outline-white" id="openContactModal">Inquire Private Event</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <h3 class="logo">The Fifth Spice</h3>
+        <p>203 Venice Blvd, CA 90291, USA</p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <div class="footer-col links-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#Home">Home</a></li>
+          <li><a href="#Menu">Menu</a></li>
+          <li><a href="#Reservation">Reservation</a></li>
+          <li><a href="#Contact">Contact</a></li>
+          <li><a href="#About">About us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col contact-col">
+        <h4>Newsletter</h4>
+        <p style="margin-bottom: 1rem;">Subscribe to our newsletter for the latest updates.</p>
+        <form id="newsletterForm" class="newsletter-form">
+          <input type="email" placeholder="Your Email" required>
+          <button type="submit" class="btn btn-gold">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Fifth Spice. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Dummy script tags for compatibility with previous interactions -->
+  <button id="menuToggle" style="display:none;"></button>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Flip.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
