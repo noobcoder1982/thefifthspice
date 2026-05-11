@@ -32,13 +32,15 @@ The project includes an animated landing page, interactive menu flow, booking/co
 - **HTML5**
 - **CSS3**
 - **JavaScript (ES6, no framework)**
-- **Python** (optional utility scripts for repository maintenance/refactors)
 
 ### External libraries/CDNs used in the project
 - **GSAP** (`gsap`, `SplitText`, `ScrollTrigger`, `Flip`) for animations
 - **Font Awesome** for iconography
 - **Google Fonts** for typography
 - **html2pdf.js** for invoice PDF export
+
+### Maintenance tooling (optional)
+- **Python** scripts in the repository are used for maintenance/refactor automation and are not required to run the site.
 
 ## 🚀 Setup & Installation
 
