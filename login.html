@@ -3,297 +3,268 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Fifth Spice - Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>The Fifth Spice - Member Access</title>
+  <!-- Modern Google Fonts Import -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Standalone Revamped Login Page Specific Styles */
-    body {
-      background-color: #050505;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    /* Standalone Modern Revamped Split-Pane Login Style */
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
+      padding: 0;
     }
-
-    /* Ambient Glowing Accents */
-    .ambient-glow-1 {
-      position: absolute;
-      top: -10%;
-      left: -10%;
-      width: 50%;
-      height: 50%;
-      background: radial-gradient(circle, rgba(166, 138, 86, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .ambient-glow-2 {
-      position: absolute;
-      bottom: -10%;
-      right: -10%;
-      width: 50%;
-      height: 50%;
-      background: radial-gradient(circle, rgba(166, 138, 86, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Back To Home Button */
-    .back-to-home {
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
-      color: var(--text-light);
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+      color: #111827;
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    .login-wrapper {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-height: 100vh;
+    }
+    
+    /* Left Form Section */
+    .form-section {
+      width: 42%;
+      background-color: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 4rem 5rem;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    /* Back Button */
+    .back-btn {
+      display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      z-index: 10;
-      transition: var(--transition);
-      padding: 0.5rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 4px;
-      background-color: rgba(12, 12, 12, 0.4);
+      color: #6b7280;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.2s ease, transform 0.2s ease;
+      margin-bottom: 2rem;
+      align-self: flex-start;
     }
-
-    .back-to-home:hover {
-      color: var(--gold);
-      border-color: var(--gold);
+    .back-btn:hover {
+      color: #ff5e14;
       transform: translateX(-4px);
     }
 
-    /* Login Container Card */
-    .login-container {
-      position: relative;
-      width: 100%;
-      max-width: 460px;
-      background: linear-gradient(145deg, #131313 0%, #0c0c0c 100%);
-      border: 1px solid rgba(166, 138, 86, 0.15);
-      padding: 3.5rem 3rem;
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(166, 138, 86, 0.03);
-      z-index: 5;
-      text-align: center;
+    /* Logo area */
+    .brand-logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      margin-bottom: 3.5rem;
+      font-family: 'Inter', sans-serif;
+    }
+    .brand-logo .accent-text {
+      color: #ff5e14;
+      font-weight: 800;
     }
 
-    /* Logo Styling */
-    .login-logo {
+    .form-content {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      line-height: 1;
-      margin-bottom: 2.5rem;
-    }
-
-    .login-logo-top {
-      font-family: 'Rajjah Familia', cursive;
-      font-size: 2.2rem;
-      color: var(--gold);
-      transform: translateY(0.6rem);
-      z-index: 2;
-    }
-
-    .login-logo-bottom {
-      font-family: 'Chalga', serif;
-      font-size: 3.8rem;
-      color: var(--white);
-      letter-spacing: 0.05em;
-      z-index: 1;
-    }
-
-    /* Section Headers */
-    .login-container h2 {
-      font-family: var(--font-serif);
-      font-size: 1.8rem;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-      font-weight: normal;
-    }
-
-    .login-container p.subtitle-login {
-      font-family: var(--font-sans);
-      color: var(--text-light);
-      font-size: 0.9rem;
-      margin-bottom: 2.5rem;
-    }
-
-    /* Form Fields Styling */
-    .login-form-group {
-      position: relative;
-      margin-bottom: 2rem;
-      text-align: left;
-    }
-
-    .login-form-group input {
+      justify-content: center;
+      max-width: 400px;
       width: 100%;
-      padding: 1rem 0.5rem;
-      background: transparent;
-      border: none;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
-      color: var(--white);
-      font-family: var(--font-sans);
-      font-size: 1rem;
+      margin: 0 auto;
+    }
+
+    /* Titles */
+    .form-content h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .form-content h2 .accent-text {
+      color: #ff5e14;
+    }
+    .form-content .subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+    .form-group input {
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.95rem;
+      color: #1f2937;
       outline: none;
-      transition: var(--transition);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'Inter', sans-serif;
     }
-
-    /* Label transition on focus */
-    .login-form-group label {
+    .form-group input::placeholder {
+      color: #9ca3af;
+    }
+    .form-group input:focus {
+      border-color: #ff5e14;
+      box-shadow: 0 0 0 4px rgba(255, 94, 20, 0.1);
+    }
+    
+    /* Password Eye Toggle */
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      padding-right: 3rem;
+    }
+    .password-toggle {
       position: absolute;
-      left: 0.5rem;
-      top: 1rem;
-      color: var(--text-light);
-      font-family: var(--font-sans);
+      right: 1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      cursor: pointer;
       font-size: 1rem;
-      pointer-events: none;
-      transition: var(--transition);
+      transition: color 0.2s ease;
+    }
+    .password-toggle:hover {
+      color: #1f2937;
     }
 
-    /* Input Focus States */
-    .login-form-group input:focus {
-      border-bottom-color: var(--gold);
-    }
-
-    .login-form-group input:focus ~ label,
-    .login-form-group input:not(:placeholder-shown) ~ label {
-      top: -0.8rem;
-      left: 0.5rem;
-      font-size: 0.78rem;
-      color: var(--gold);
-      font-family: var(--font-mono);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    /* Remember and Forgot password link */
+    /* Form Options (Remember me & Forgot password) */
     .form-options {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
-      color: var(--text-light);
+      margin-top: 1rem;
       margin-bottom: 2rem;
+      font-size: 0.88rem;
     }
-
     .remember-me {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      color: #374151;
       cursor: pointer;
+      user-select: none;
+      font-weight: 500;
     }
-
     .remember-me input {
-      accent-color: var(--gold);
+      width: 16px;
+      height: 16px;
+      accent-color: #ff5e14;
       cursor: pointer;
+      border: 1.5px solid #d1d5db;
+      border-radius: 4px;
     }
-
     .forgot-link {
-      color: var(--text-light);
-      transition: var(--transition);
+      color: #374151;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
     }
-
     .forgot-link:hover {
-      color: var(--gold);
+      color: #ff5e14;
     }
 
-    /* Submit Button Revamp */
-    .login-btn-submit {
-      width: 100%;
-      padding: 1.2rem;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      background-color: var(--gold);
-      color: var(--white);
+    /* Submit Button (Compact layout matching the image) */
+    .submit-btn-container {
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+    .btn-signin {
+      background-color: #ff5e14;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
-      font-weight: bold;
-      border-radius: 4px;
-      transition: var(--transition);
-      box-shadow: 0 4px 15px rgba(166, 138, 86, 0.2);
+      transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 14px rgba(255, 94, 20, 0.2);
+    }
+    .btn-signin:hover {
+      background-color: #e04f0f;
+      box-shadow: 0 6px 20px rgba(255, 94, 20, 0.35);
+      transform: translateY(-1px);
+    }
+    .btn-signin:active {
+      transform: translateY(1px);
     }
 
-    .login-btn-submit:hover {
-      background-color: var(--gold-hover);
-      box-shadow: 0 6px 20px rgba(166, 138, 86, 0.4);
-      transform: translateY(-2px);
+    /* Footer Sign Up Link */
+    .signup-prompt {
+      font-size: 0.9rem;
+      color: #4b5563;
+      margin-bottom: 2rem;
+    }
+    .signup-prompt a {
+      color: #ff5e14;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .signup-prompt a:hover {
+      color: #e04f0f;
+      text-decoration: underline;
     }
 
-    .login-btn-submit:active {
-      transform: translateY(0);
-    }
-
-    /* Social Dividers */
-    .login-divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      margin: 2.5rem 0;
-      color: rgba(255, 255, 255, 0.15);
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.15em;
-    }
-
-    .login-divider::before, .login-divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .login-divider:not(:empty)::before {
-      margin-right: 1.5rem;
-    }
-
-    .login-divider:not(:empty)::after {
-      margin-left: 1.5rem;
-    }
-
-    /* Social login buttons */
-    .social-btn-container {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .social-btn {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      padding: 0.9rem;
-      background-color: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--white);
-      border-radius: 4px;
-      font-family: var(--font-mono);
+    /* Form Footer */
+    .form-footer {
       font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: var(--transition);
+      color: #9ca3af;
+      line-height: 1.5;
     }
 
-    .social-btn:hover {
-      border-color: var(--gold);
-      background-color: rgba(166, 138, 86, 0.05);
-      color: var(--gold);
+    /* Right Visual Panel */
+    .image-section {
+      width: 58%;
+      background-color: #050505;
+      background-image: url('Images/login_bg_fluid.png');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .image-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at center, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
     }
 
-    /* Success Overlay Animation */
+    /* Success Overlay Animation within Left Panel */
     .success-overlay {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background-color: #0c0c0c;
+      background-color: #ffffff;
       z-index: 20;
       display: flex;
       flex-direction: column;
@@ -302,113 +273,155 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.5s ease;
-      border-radius: 12px;
+      padding: 2rem;
     }
-
     .success-overlay.active {
       opacity: 1;
       pointer-events: auto;
     }
-
     .success-icon {
-      font-size: 4rem;
-      color: #27ae60;
+      font-size: 4.5rem;
+      color: #10b981;
       margin-bottom: 1.5rem;
       transform: scale(0.5);
       transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
     .success-overlay.active .success-icon {
       transform: scale(1);
     }
-
     .success-title {
-      font-family: 'Chalga', var(--font-serif);
-      font-size: 2rem;
-      color: var(--gold);
-      letter-spacing: 0.05em;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #111827;
       margin-bottom: 0.5rem;
-      text-transform: uppercase;
+      text-align: center;
+    }
+    .success-desc {
+      color: #6b7280;
+      font-size: 0.95rem;
+      text-align: center;
     }
 
-    .success-desc {
-      font-family: var(--font-mono);
-      color: var(--text-light);
-      font-size: 0.85rem;
+    /* Responsive styling */
+    @media (max-width: 1200px) {
+      .form-section {
+        padding: 4rem 3.5rem;
+      }
+    }
+    @media (max-width: 1024px) {
+      .form-section {
+        width: 50%;
+        padding: 4rem 3rem;
+      }
+      .image-section {
+        width: 50%;
+      }
+    }
+    @media (max-width: 768px) {
+      .login-wrapper {
+        flex-direction: column;
+      }
+      .form-section {
+        width: 100%;
+        min-height: 100vh;
+        padding: 4rem 2rem;
+      }
+      .image-section {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background decorative glows -->
-  <div class="ambient-glow-1"></div>
-  <div class="ambient-glow-2"></div>
-
-  <!-- Back Button -->
-  <a href="index.html" class="back-to-home">
-    <i class="fas fa-arrow-left"></i> Home
-  </a>
-
-  <!-- Login Card Container -->
-  <div class="login-container">
-    
-    <!-- Success Overlay -->
-    <div class="success-overlay" id="successOverlay">
-      <div class="success-icon">
-        <i class="fas fa-check-circle"></i>
+  <div class="login-wrapper">
+    <!-- Left form section -->
+    <div class="form-section">
+      <!-- Success Overlay -->
+      <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h3 class="success-title">Secure Sign In</h3>
+        <p class="success-desc" id="successDesc">Access Granted. Welcoming you back...</p>
       </div>
-      <h3 class="success-title">Secure Sign In</h3>
-      <p class="success-desc" id="successDesc">Access Granted. Welcoming you back...</p>
+
+      <!-- Top Nav/Back -->
+      <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Home
+      </a>
+
+      <!-- Main login form area -->
+      <div class="form-content">
+        <!-- Logo -->
+        <div class="brand-logo">
+          FIFTH<span class="accent-text">SPICE</span>
+        </div>
+
+        <h2>Savor the Spices, <span class="accent-text">Smarter</span></h2>
+        <p class="subtitle">
+          A seamless and premium platform designed to help you explore rich cuisines, reserve tables, and order your favorite feasts, all in one place.
+        </p>
+
+        <!-- Form -->
+        <form id="standaloneLoginForm">
+          <div class="form-group">
+            <input type="email" id="loginEmail" placeholder="jane@gmail.com" required autocomplete="email">
+          </div>
+          
+          <div class="form-group password-wrapper">
+            <input type="password" id="loginPassword" placeholder="••••••" required autocomplete="current-password">
+            <i class="fa-regular fa-eye password-toggle" id="togglePassword"></i>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div>
+
+          <div class="submit-btn-container">
+            <button type="submit" class="btn-signin">Sign in</button>
+          </div>
+        </form>
+
+        <div class="signup-prompt">
+          Don't have an account? <a href="#">Sign Up</a>
+        </div>
+      </div>
+
+      <!-- Footer copyright -->
+      <div class="form-footer">
+        Copyright &copy; 2026 The Fifth Spice.<br>All rights reserved.
+      </div>
     </div>
 
-    <!-- Fifth Spice Logo Header -->
-    <div class="login-logo">
-      <span class="login-logo-top">The Fifth</span>
-      <span class="login-logo-bottom">SPICE</span>
-    </div>
-
-    <h2>Welcome Back</h2>
-    <p class="subtitle-login">Secure credentials authentication</p>
-
-    <!-- Credential Login Form -->
-    <form id="standaloneLoginForm">
-      <div class="login-form-group">
-        <input type="email" id="loginEmail" placeholder=" " required autocomplete="email">
-        <label for="loginEmail">Email Address</label>
-      </div>
-      
-      <div class="login-form-group">
-        <input type="password" id="loginPassword" placeholder=" " required autocomplete="current-password">
-        <label for="loginPassword">Password</label>
-      </div>
-
-      <div class="form-options">
-        <label class="remember-me">
-          <input type="checkbox" id="rememberMe">
-          <span>Remember Me</span>
-        </label>
-        <a href="#" class="forgot-link">Forgot Password?</a>
-      </div>
-
-      <button type="submit" class="login-btn-submit">Sign In</button>
-    </form>
-
-    <div class="login-divider">OR</div>
-
-    <!-- Social Sign In Option buttons -->
-    <div class="social-btn-container">
-      <button class="social-btn" onclick="handleSocialLogin('Google')">
-        <i class="fab fa-google" style="color: #ea4335;"></i> Google
-      </button>
-      <button class="social-btn" onclick="handleSocialLogin('Apple')">
-        <i class="fab fa-apple"></i> Apple
-      </button>
+    <!-- Right visual panel (hidden on small devices) -->
+    <div class="image-section">
+      <div class="image-overlay"></div>
     </div>
   </div>
 
+  <!-- GSAP Animation library -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
   <script>
-    // Handle Interactive Sign In Form Submission
+    // Toggle Password Visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('loginPassword');
+
+    togglePassword.addEventListener('click', function() {
+      // Toggle field type
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
+      
+      // Toggle eye icon class
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+
+    // Handle Form Submission with local storage and transition
     document.getElementById('standaloneLoginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -421,7 +434,7 @@
         localStorage.setItem('rememberUser', 'true');
       }
       
-      // Activate the gorgeous checkmark overlay
+      // Activate the checkmark overlay
       const overlay = document.getElementById('successOverlay');
       const desc = document.getElementById('successDesc');
       const name = email.split('@')[0];
@@ -435,31 +448,18 @@
       }, 2000);
     });
 
-    // Handle Social Login Options
-    function handleSocialLogin(platform) {
-      localStorage.setItem('userEmail', `${platform.toLowerCase()}_guest@thefifthspice.com`);
-      
-      const overlay = document.getElementById('successOverlay');
-      const desc = document.getElementById('successDesc');
-      desc.textContent = `Connected with ${platform}. Directing to lounge...`;
-      overlay.classList.add('active');
-      
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 2000);
-    }
-
-    // Elegant GSAP Entry Animation for Card Elements
+    // GSAP Entry Reveal Animations
     window.addEventListener('DOMContentLoaded', () => {
       if (typeof gsap !== 'undefined') {
         const tl = gsap.timeline();
-        tl.from('.login-container', { scale: 0.95, opacity: 0, duration: 0.8, ease: 'back.out(1.1)' })
-          .from('.login-logo-top', { y: 20, opacity: 0, duration: 0.5 }, '-=0.4')
-          .from('.login-logo-bottom', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
-          .from('.login-container h2, .subtitle-login', { y: 15, opacity: 0, stagger: 0.08, duration: 0.5 }, '-=0.3')
-          .from('.login-form-group, .form-options', { y: 15, opacity: 0, stagger: 0.08, duration: 0.5 }, '-=0.3')
-          .from('.login-btn-submit', { y: 10, opacity: 0, duration: 0.4 }, '-=0.2')
-          .from('.login-divider, .social-btn', { opacity: 0, stagger: 0.08, duration: 0.5 }, '-=0.2');
+        tl.from('.form-section', { x: -40, opacity: 0, duration: 0.8, ease: 'power3.out' })
+          .from('.back-btn', { y: -10, opacity: 0, duration: 0.4 }, '-=0.4')
+          .from('.brand-logo', { y: -15, opacity: 0, duration: 0.4 }, '-=0.3')
+          .from('.form-content h2, .form-content .subtitle', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6, ease: 'power3.out' }, '-=0.2')
+          .from('.form-group, .form-options', { y: 15, opacity: 0, stagger: 0.08, duration: 0.5, ease: 'power3.out' }, '-=0.3')
+          .from('.submit-btn-container, .signup-prompt', { y: 10, opacity: 0, stagger: 0.08, duration: 0.4 }, '-=0.2')
+          .from('.form-footer', { opacity: 0, duration: 0.4 }, '-=0.2')
+          .from('.image-section', { opacity: 0, x: 20, duration: 1.0, ease: 'power2.out' }, '0');
       }
     });
   </script>

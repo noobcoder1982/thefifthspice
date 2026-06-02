@@ -118,11 +118,11 @@ window.addEventListener('load', () => {
     const splitTitleTop = new SplitText('.title-top', { type: 'words,chars' });
     const splitTitleBottom = new SplitText('.title-bottom', { type: 'chars' });
 
-    // Initial states
-    gsap.set(splitTitleTop.chars, { opacity: 0, y: 40, rotationX: -90, transformOrigin: '50% 50% -20px' });
-    gsap.set(splitTitleBottom.chars, { opacity: 0, y: 60, scale: 0.95 });
-    gsap.set('.hero-nav', { opacity: 0, y: -20 });
-    gsap.set('.hero-footer', { opacity: 0, y: 20 });
+    // Initial states with blur reveal variables
+    gsap.set(splitTitleTop.chars, { opacity: 0, y: 40, rotationX: -90, transformOrigin: '50% 50% -20px', filter: 'blur(12px)' });
+    gsap.set(splitTitleBottom.chars, { opacity: 0, y: 60, scale: 0.95, filter: 'blur(15px)' });
+    gsap.set('.hero-nav', { opacity: 0, y: -20, filter: 'blur(10px)' });
+    gsap.set('.hero-footer', { opacity: 0, y: 20, filter: 'blur(10px)' });
 
     const heroTl = gsap.timeline({ delay: 0.3 });
 
@@ -131,6 +131,7 @@ window.addEventListener('load', () => {
         opacity: 1,
         y: 0,
         rotationX: 0,
+        filter: 'blur(0px)',
         duration: 1.2,
         stagger: 0.05,
         ease: 'power4.out'
@@ -139,19 +140,43 @@ window.addEventListener('load', () => {
         opacity: 1,
         y: 0,
         scale: 1,
+        filter: 'blur(0px)',
         duration: 1.5,
         stagger: 0.06,
         ease: 'back.out(1.2)'
       }, '<0.3')
-      .to('.hero-nav', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, '-=0.8')
-      .to('.hero-footer', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, '<');
+      .to('.hero-nav', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }, '-=0.8')
+      .to('.hero-footer', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out' }, '<');
   }
 
-  setTimeout(() => {
-    document.querySelectorAll('.fade-in').forEach(function (el) {
-      el.classList.add('visible');
+  // Premium Scroll-Triggered Blur Reveal observer
+  if ('IntersectionObserver' in window) {
+    const revealCallback = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target); // Trigger only once
+        }
+      });
+    };
+
+    const revealObserver = new IntersectionObserver(revealCallback, {
+      root: null,
+      threshold: 0.05,
+      rootMargin: '0px 0px -60px 0px' // Reveals elements dynamically just before they scroll in
     });
-  }, 300);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      revealObserver.observe(el);
+    });
+  } else {
+    // Fallback if IntersectionObserver is not supported
+    setTimeout(() => {
+      document.querySelectorAll('.fade-in').forEach(function (el) {
+        el.classList.add('visible');
+      });
+    }, 300);
+  }
 });
 
 function toggleFavorite(name, price, image) {

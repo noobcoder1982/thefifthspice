@@ -12,14 +12,14 @@
    CSS Variables & Base (Dark Theme)
    ========================================================================== */
 :root {
-  --bg-color: #0c0c0c;
-  --bg-alt: #131313;
-  --text-dark: #f0f0f0;
-  --text-light: #888888;
-  --gold: #A68A56;
-  --gold-hover: #8C7345;
+  --bg-color: #030303;
+  --bg-alt: #090909;
+  --text-dark: #f5f5f7;
+  --text-light: #86868b;
+  --gold: #ff5e14;
+  --gold-hover: #e04f0f;
   --white: #FFFFFF;
-  --border-color: #222222;
+  --border-color: #1a1a1a;
   
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Inter', sans-serif;
@@ -1329,13 +1329,18 @@ textarea { resize: vertical; }
    ========================================================================== */
 .fade-in {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  filter: blur(12px);
+  transform: translateY(30px) scale(0.98);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              filter 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
 }
 
 .fade-in.visible {
   opacity: 1;
-  transform: translateY(0);
+  filter: blur(0);
+  transform: translateY(0) scale(1);
 }
 
 /* ==========================================================================
@@ -1932,4 +1937,21 @@ textarea { resize: vertical; }
   background-color: #111 !important;
   color: #fff !important;
   border-color: #111 !important;
+}
+
+/* ==========================================================================
+   Premium Scrolled Nav Translucent Styling
+   ========================================================================== */
+.hero-nav {
+  transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              padding 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-bottom 0.4s ease !important;
+}
+
+.scrolled-nav {
+  background: rgba(3, 3, 3, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 1.1rem 4rem !important; /* Elegant compact size on scroll */
 }
