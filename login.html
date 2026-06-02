@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Fifth Spice - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Standalone Revamped Login Page Specific Styles */
+    body {
+      background-color: #050505;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient Glowing Accents */
+    .ambient-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 50%;
+      height: 50%;
+      background: radial-gradient(circle, rgba(166, 138, 86, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 50%;
+      height: 50%;
+      background: radial-gradient(circle, rgba(166, 138, 86, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Back To Home Button */
+    .back-to-home {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      color: var(--text-light);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 10;
+      transition: var(--transition);
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      background-color: rgba(12, 12, 12, 0.4);
+    }
+
+    .back-to-home:hover {
+      color: var(--gold);
+      border-color: var(--gold);
+      transform: translateX(-4px);
+    }
+
+    /* Login Container Card */
+    .login-container {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      background: linear-gradient(145deg, #131313 0%, #0c0c0c 100%);
+      border: 1px solid rgba(166, 138, 86, 0.15);
+      padding: 3.5rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(166, 138, 86, 0.03);
+      z-index: 5;
+      text-align: center;
+    }
+
+    /* Logo Styling */
+    .login-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-logo-top {
+      font-family: 'Rajjah Familia', cursive;
+      font-size: 2.2rem;
+      color: var(--gold);
+      transform: translateY(0.6rem);
+      z-index: 2;
+    }
+
+    .login-logo-bottom {
+      font-family: 'Chalga', serif;
+      font-size: 3.8rem;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      z-index: 1;
+    }
+
+    /* Section Headers */
+    .login-container h2 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      font-weight: normal;
+    }
+
+    .login-container p.subtitle-login {
+      font-family: var(--font-sans);
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Form Fields Styling */
+    .login-form-group {
+      position: relative;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .login-form-group input {
+      width: 100%;
+      padding: 1rem 0.5rem;
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    /* Label transition on focus */
+    .login-form-group label {
+      position: absolute;
+      left: 0.5rem;
+      top: 1rem;
+      color: var(--text-light);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      pointer-events: none;
+      transition: var(--transition);
+    }
+
+    /* Input Focus States */
+    .login-form-group input:focus {
+      border-bottom-color: var(--gold);
+    }
+
+    .login-form-group input:focus ~ label,
+    .login-form-group input:not(:placeholder-shown) ~ label {
+      top: -0.8rem;
+      left: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--gold);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Remember and Forgot password link */
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .remember-me input {
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+
+    .forgot-link:hover {
+      color: var(--gold);
+    }
+
+    /* Submit Button Revamp */
+    .login-btn-submit {
+      width: 100%;
+      padding: 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background-color: var(--gold);
+      color: var(--white);
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(166, 138, 86, 0.2);
+    }
+
+    .login-btn-submit:hover {
+      background-color: var(--gold-hover);
+      box-shadow: 0 6px 20px rgba(166, 138, 86, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .login-btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* Social Dividers */
+    .login-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 2.5rem 0;
+      color: rgba(255, 255, 255, 0.15);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+    }
+
+    .login-divider::before, .login-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .login-divider:not(:empty)::before {
+      margin-right: 1.5rem;
+    }
+
+    .login-divider:not(:empty)::after {
+      margin-left: 1.5rem;
+    }
+
+    /* Social login buttons */
+    .social-btn-container {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.9rem;
+      background-color: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: var(--transition);
+    }
+
+    .social-btn:hover {
+      border-color: var(--gold);
+      background-color: rgba(166, 138, 86, 0.05);
+      color: var(--gold);
+    }
+
+    /* Success Overlay Animation */
+    .success-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: #0c0c0c;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      border-radius: 12px;
+    }
+
+    .success-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      color: #27ae60;
+      margin-bottom: 1.5rem;
+      transform: scale(0.5);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .success-overlay.active .success-icon {
+      transform: scale(1);
+    }
+
+    .success-title {
+      font-family: 'Chalga', var(--font-serif);
+      font-size: 2rem;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .success-desc {
+      font-family: var(--font-mono);
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background decorative glows -->
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- Back Button -->
+  <a href="index.html" class="back-to-home">
+    <i class="fas fa-arrow-left"></i> Home
+  </a>
+
+  <!-- Login Card Container -->
+  <div class="login-container">
+    
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h3 class="success-title">Secure Sign In</h3>
+      <p class="success-desc" id="successDesc">Access Granted. Welcoming you back...</p>
+    </div>
+
+    <!-- Fifth Spice Logo Header -->
+    <div class="login-logo">
+      <span class="login-logo-top">The Fifth</span>
+      <span class="login-logo-bottom">SPICE</span>
+    </div>
+
+    <h2>Welcome Back</h2>
+    <p class="subtitle-login">Secure credentials authentication</p>
+
+    <!-- Credential Login Form -->
+    <form id="standaloneLoginForm">
+      <div class="login-form-group">
+        <input type="email" id="loginEmail" placeholder=" " required autocomplete="email">
+        <label for="loginEmail">Email Address</label>
+      </div>
+      
+      <div class="login-form-group">
+        <input type="password" id="loginPassword" placeholder=" " required autocomplete="current-password">
+        <label for="loginPassword">Password</label>
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" id="rememberMe">
+          <span>Remember Me</span>
+        </label>
+        <a href="#" class="forgot-link">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="login-btn-submit">Sign In</button>
+    </form>
+
+    <div class="login-divider">OR</div>
+
+    <!-- Social Sign In Option buttons -->
+    <div class="social-btn-container">
+      <button class="social-btn" onclick="handleSocialLogin('Google')">
+        <i class="fab fa-google" style="color: #ea4335;"></i> Google
+      </button>
+      <button class="social-btn" onclick="handleSocialLogin('Apple')">
+        <i class="fab fa-apple"></i> Apple
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+  <script>
+    // Handle Interactive Sign In Form Submission
+    document.getElementById('standaloneLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const remember = document.getElementById('rememberMe').checked;
+      
+      // Store user login status in local storage for cross-page persistence
+      localStorage.setItem('userEmail', email);
+      if (remember) {
+        localStorage.setItem('rememberUser', 'true');
+      }
+      
+      // Activate the gorgeous checkmark overlay
+      const overlay = document.getElementById('successOverlay');
+      const desc = document.getElementById('successDesc');
+      const name = email.split('@')[0];
+      
+      desc.textContent = `Access Granted. Welcoming you back, ${name}!`;
+      overlay.classList.add('active');
+      
+      // Smoothly redirect back to the home page after 2 seconds
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
+    });
+
+    // Handle Social Login Options
+    function handleSocialLogin(platform) {
+      localStorage.setItem('userEmail', `${platform.toLowerCase()}_guest@thefifthspice.com`);
+      
+      const overlay = document.getElementById('successOverlay');
+      const desc = document.getElementById('successDesc');
+      desc.textContent = `Connected with ${platform}. Directing to lounge...`;
+      overlay.classList.add('active');
+      
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
+    }
+
+    // Elegant GSAP Entry Animation for Card Elements
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof gsap !== 'undefined') {
+        const tl = gsap.timeline();
+        tl.from('.login-container', { scale: 0.95, opacity: 0, duration: 0.8, ease: 'back.out(1.1)' })
+          .from('.login-logo-top', { y: 20, opacity: 0, duration: 0.5 }, '-=0.4')
+          .from('.login-logo-bottom', { y: 30, opacity: 0, duration: 0.6 }, '-=0.3')
+          .from('.login-container h2, .subtitle-login', { y: 15, opacity: 0, stagger: 0.08, duration: 0.5 }, '-=0.3')
+          .from('.login-form-group, .form-options', { y: 15, opacity: 0, stagger: 0.08, duration: 0.5 }, '-=0.3')
+          .from('.login-btn-submit', { y: 10, opacity: 0, duration: 0.4 }, '-=0.2')
+          .from('.login-divider, .social-btn', { opacity: 0, stagger: 0.08, duration: 0.5 }, '-=0.2');
+      }
+    });
+  </script>
+</body>
+</html>

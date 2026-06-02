@@ -12,22 +12,6 @@
 <body>
 
   <!-- Modals -->
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <span class="close" aria-label="Close">&times;</span>
-      <h2>Login</h2>
-      <form id="loginForm" autocomplete="off">
-        <div class="form-group">
-          <input type="email" id="email" placeholder="Email" required>
-        </div>
-        <div class="form-group">
-          <input type="password" id="password" placeholder="Password" required>
-        </div>
-        <button type="submit" class="btn btn-gold w-100">Login</button>
-      </form>
-    </div>
-  </div>
 
   <!-- Contact Modal -->
   <div id="contactModal" class="modal">
@@ -71,6 +55,9 @@
                 <li class="menu-item-line"><div class="menu-item-header"><span class="item-name">THE BIG G</span><span class="item-dots"></span><span class="item-price">10.50</span></div><div class="menu-item-desc">Double steak patty, double American cheese, house made garlic mayo, sweet pickled red onions and iceberg lettuce.</div></li>
               </ul>
               <h3 class="menu-category" style="margin-top: 2rem;">MAINS</h3>
+              <div class="menu-see-more-container" style="margin-top: 3rem; text-align: center; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 2rem;">
+                <a href="cuisines.html" class="btn btn-gold" style="display: inline-block; width: 100%;">See More</a>
+              </div>
             </div>
           </div>
 
@@ -413,7 +400,7 @@
     <div class="reservation-split-container">
       <div class="reservation-image-column">
         <div class="reservation-img-wrapper">
-          <img src="https://i.pinimg.com/1200x/2e/1a/0d/2e1a0d8e8b233a04fd90b8e7df072cfa.jpg" alt="Dining Table Experience" loading="lazy">
+          <img src="Images/hero_dining.png" alt="Dining Table Experience" loading="lazy">
           <div class="reservation-img-overlay"></div>
         </div>
       </div>
@@ -444,39 +431,90 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-col brand-col">
-        <h3 class="logo">The Fifth Spice</h3>
-        <p>203 Venice Blvd, CA 90291, USA</p>
-        <div class="social-links">
-          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+  <!-- Redesigned Premium Footer -->
+  <footer class="footer-new">
+    <div class="footer-cta-bar">
+      <div class="footer-cta-content">
+        <span class="footer-cta-sub">CULINARY MEMORIES</span>
+        <h3 class="footer-cta-title">Ready to Experience the Feast?</h3>
+      </div>
+      <button class="btn btn-gold footer-cta-btn hero-side-trigger" data-target="tab-bookings">Book Your Table</button>
+    </div>
+
+    <div class="footer-main-grid">
+      <!-- Brand Column -->
+      <div class="footer-grid-col brand-col">
+        <div class="footer-brand-logo">
+          <span class="logo-text-top">The Fifth</span>
+          <span class="logo-text-bottom">SPICE</span>
+        </div>
+        <p class="brand-editorial-text">
+          A sensory journey exploring modern gastronomy and the alchemy of five primary spices. Merging tradition with culinary avant-garde.
+        </p>
+        <div class="footer-contact-info">
+          <p><i class="fas fa-map-marker-alt"></i> 203 Venice Blvd, CA 90291, USA</p>
+          <p><i class="fas fa-phone"></i> +1 310-823-5396</p>
+          <p><i class="fas fa-envelope"></i> eat@thefifthspice.com</p>
         </div>
       </div>
-      <div class="footer-col links-col">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="#Home">Home</a></li>
-          <li><a href="#Menu">Menu</a></li>
-          <li><a href="#Reservation">Reservation</a></li>
-          <li><a href="#Contact">Contact</a></li>
-          <li><a href="#About">About us</a></li>
+
+      <!-- Operating Hours Column -->
+      <div class="footer-grid-col hours-col">
+        <h4 class="col-heading">Operational Hours</h4>
+        <ul class="hours-list">
+          <li><span class="day">Monday - Thursday</span><span class="divider-dots"></span><span class="time">17:00 - 23:00</span></li>
+          <li><span class="day">Friday - Saturday</span><span class="divider-dots"></span><span class="time">16:00 - 00:00</span></li>
+          <li><span class="day">Sunday Brunch</span><span class="divider-dots"></span><span class="time">11:00 - 16:00</span></li>
+          <li><span class="day">Sunday Dinner</span><span class="divider-dots"></span><span class="time">Closed</span></li>
         </ul>
       </div>
-      <div class="footer-col contact-col">
-        <h4>Newsletter</h4>
-        <p style="margin-bottom: 1rem;">Subscribe to our newsletter for the latest updates.</p>
-        <form id="newsletterForm" class="newsletter-form">
-          <input type="email" placeholder="Your Email" required>
-          <button type="submit" class="btn btn-gold">Subscribe</button>
+
+      <!-- Explore Links Column -->
+      <div class="footer-grid-col links-col">
+        <h4 class="col-heading">Navigate</h4>
+        <ul class="explore-links">
+          <li><a href="index.html" class="footer-link"><i class="fas fa-chevron-right"></i> Home Lounge</a></li>
+          <li><a href="cuisines.html" class="footer-link"><i class="fas fa-chevron-right"></i> Taste Cuisines</a></li>
+          <li><a href="about.html" class="footer-link"><i class="fas fa-chevron-right"></i> Our Legacy</a></li>
+          <li><a href="login.html" class="footer-link"><i class="fas fa-chevron-right"></i> Member Access</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter Column -->
+      <div class="footer-grid-col newsletter-col">
+        <h4 class="col-heading">The Newsletter</h4>
+        <p class="newsletter-sub-text">Join our gastronomic inner circle for secret recipes, exclusive wine tastings, and seasonal events.</p>
+        <form class="footer-newsletter-form" id="footerNewsletterForm">
+          <div class="input-wrapper">
+            <input type="email" placeholder="Enter your email" required autocomplete="email">
+            <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i></button>
+          </div>
         </form>
+        <div class="footer-social-wrapper">
+          <span class="social-label">Follow Us</span>
+          <div class="footer-social-links">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 The Fifth Spice. All Rights Reserved.</p>
+
+    <!-- Massive Brand Mark Backdrop -->
+    <div class="footer-backdrop-mark">THE FIFTH SPICE</div>
+
+    <div class="footer-bottom-bar">
+      <p class="copyright-text">&copy; 2026 The Fifth Spice. Crafted for culinary perfection.</p>
+      <div class="footer-legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Sitemap</a>
+      </div>
+      <button class="scroll-to-top-btn" id="btnScrollToTop" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+      </button>
     </div>
   </footer>
 

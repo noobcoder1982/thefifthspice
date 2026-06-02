@@ -1,6 +1,6 @@
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
-let cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+let cartTotal = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
 
 // Migrate old favorites format
 let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -11,7 +11,8 @@ if (favorites.length > 0 && typeof favorites[0] === 'string') {
 
 
 function updateCartUI() {
-  document.querySelectorAll('.cartCountDisplay').forEach(el => el.textContent = cart.length);
+  cartTotal = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+  document.querySelectorAll('.cartCountDisplay').forEach(el => el.textContent = cart.reduce((sum, item) => sum + (item.quantity || 1), 0));
   document.querySelectorAll('.favoritesCountDisplay').forEach(el => el.textContent = favorites.length);
   const cartItems = document.getElementById('cartItems');
   const cartTotalElement = document.getElementById('cartTotal');
@@ -22,20 +23,53 @@ function updateCartUI() {
     cartItems.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">Your Cart Is Empty</p>';
   } else {
     cartItems.innerHTML = cart.map((item) => `
-      <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" loading="lazy">
-        <div class="cart-item-details">
-          <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
+      <div class="cart-item" style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+        <img src="${item.image}" alt="${item.name}" loading="lazy" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+        <div class="cart-item-details" style="flex-grow: 1;">
+          <div class="cart-item-name" style="font-family: var(--font-serif); font-size: 1.1rem; color: #fff;">${item.name}</div>
+          <div class="cart-item-price-qty" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 0.25rem;">
+            <span class="cart-item-price" style="color: var(--gold); font-family: var(--font-mono); font-size: 0.95rem;">₹${item.price.toFixed(2)}</span>
+            <span class="cart-item-qty" style="color: #888; font-family: var(--font-mono); font-size: 0.9rem;">x ${item.quantity || 1}</span>
+          </div>
         </div>
       </div>
     `).join('');
   }
+  
+  // Custom event so other elements/pages can listen to cart changes
+  window.dispatchEvent(new CustomEvent('cartUpdated'));
 }
 
-function addToCart(name, price, image) {
-  cart.push({ name, price: parseFloat(price), image });
-  cartTotal += parseFloat(price);
+function addToCart(name, price, image, quantity = 1) {
+  const parsedPrice = parseFloat(price);
+  const existingItem = cart.find(item => item.name === name);
+  if (existingItem) {
+    existingItem.quantity = (existingItem.quantity || 1) + quantity;
+  } else {
+    cart.push({ name, price: parsedPrice, image, quantity: quantity });
+  }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartUI();
+}
+
+function removeFromCart(name) {
+  cart = cart.filter(item => item.name !== name);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartUI();
+}
+
+function updateCartQuantity(name, quantity) {
+  const existingItem = cart.find(item => item.name === name);
+  if (existingItem) {
+    existingItem.quantity = parseInt(quantity);
+    if (existingItem.quantity <= 0) {
+      removeFromCart(name);
+      return;
+    }
+  } else if (quantity > 0) {
+    // Should not happen normally, but safe-fallback
+    addToCart(name, 0, '', quantity);
+  }
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartUI();
 }
@@ -77,11 +111,6 @@ function updateFavoritesList() {
 }
 
 window.addEventListener('load', () => {
-  if (history.scrollRestoration) {
-    history.scrollRestoration = 'manual';
-  }
-  window.scrollTo(0, 0);
-
   document.body.style.opacity = '1';
 
   // Hero Logo & Element Reveal Animation
@@ -175,23 +204,35 @@ document.querySelectorAll('.modal').forEach(modal => {
   });
 });
 
-// Login Modal
+// Standalone Login Page Integration & Session Management
 const loginBtn = document.getElementById('loginBtn');
-const loginModal = document.getElementById('loginModal');
-const loginForm = document.getElementById('loginForm');
+const loggedInUser = localStorage.getItem('userEmail');
 
-loginBtn.addEventListener('click', () => {
-  openModal('loginModal');
-});
+if (loginBtn) {
+  if (loggedInUser) {
+    const userName = loggedInUser.split('@')[0].toUpperCase();
+    loginBtn.textContent = `WELCOME, ${userName}`;
+    loginBtn.style.color = '#27ae60'; // Clean accent green
+    
+    // Inject custom style to ensure the hover strikethrough matches the active green color
+    const customStyle = document.createElement('style');
+    customStyle.textContent = '#loginBtn::after { background-color: #27ae60 !important; }';
+    document.head.appendChild(customStyle);
+  }
 
-loginForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  alert(`Login successful, Welcome ${email}!`);
-  closeModal('loginModal');
-  loginBtn.textContent = `Welcome, ${email}`;
-  loginBtn.style.background = '#27ae60';
-});
+  loginBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (localStorage.getItem('userEmail')) {
+      if (confirm('Do you want to sign out of your account?')) {
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('rememberUser');
+        window.location.href = 'index.html'; // Go back to home page after logging out
+      }
+    } else {
+      window.location.href = 'login.html';
+    }
+  });
+}
 
 // Reservation Form
 const reservationForm = document.getElementById('ReservationForm'); // Note: HTML has capital R
@@ -526,9 +567,9 @@ if (btnPayNow) {
       
       const invoiceItems = document.getElementById('invoice-items');
       invoiceItems.innerHTML = cart.map(item => `
-        <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
-          <span>${item.name}</span>
-          <span>₹${item.price.toFixed(2)}</span>
+        <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.95rem;">
+          <span>${item.name} ${item.quantity > 1 ? `x ${item.quantity}` : ''}</span>
+          <span>₹${(item.price * (item.quantity || 1)).toFixed(2)}</span>
         </div>
       `).join('');
       
@@ -609,4 +650,28 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
           .to(scanLine, { top: '100%', ease: 'none' }, 0)
           .set(scanLine, { opacity: 0 });
   }
+}
+
+// Circular Scroll to Top Action
+const btnScrollToTop = document.getElementById('btnScrollToTop');
+if (btnScrollToTop) {
+  btnScrollToTop.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
+
+// Redesigned Newsletter Submit Interaction
+const footerNewsletterForm = document.getElementById('footerNewsletterForm');
+if (footerNewsletterForm) {
+  footerNewsletterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const emailInput = footerNewsletterForm.querySelector('input[type="email"]');
+    if (emailInput && emailInput.value) {
+      alert(`Welcome to the Culinary Circle! A confirmation invite has been dispatched to: ${emailInput.value}`);
+      emailInput.value = '';
+    }
+  });
 }

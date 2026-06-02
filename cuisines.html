@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Fifth Spice - Cuisines</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=UnifrakturMaguntia&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Premium Cuisines Page Specific Styles */
+    .cuisines-hero {
+      position: relative;
+      padding: 10rem 2rem 4rem;
+      text-align: center;
+      background: linear-gradient(180deg, #050505 0%, var(--bg-color) 100%);
+    }
+
+    .cuisines-hero h1 {
+      font-family: 'Chalga', var(--font-serif);
+      font-size: 5rem;
+      text-transform: uppercase;
+      font-weight: normal;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .cuisines-hero p {
+      color: var(--text-light);
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      text-transform: lowercase;
+    }
+
+    /* Cuisine Tab Selector */
+    .cuisine-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+      padding: 0 1rem;
+    }
+
+    .cuisine-tab-btn {
+      padding: 1rem 2.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: var(--bg-alt);
+      color: var(--text-dark);
+      transition: var(--transition);
+      border-radius: 40px;
+    }
+
+    .cuisine-tab-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .cuisine-tab-btn.active {
+      background-color: var(--gold);
+      border-color: var(--gold);
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(166, 138, 86, 0.3);
+    }
+
+    /* Cuisines Grid */
+    .cuisines-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 8rem;
+    }
+
+    .cuisines-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 3rem 2rem;
+      width: 100%;
+    }
+
+    /* Unified Card Design - Exact Uniform dimensions */
+    .cuisine-card {
+      background-color: var(--bg-alt);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 480px; /* Fixed Height to Guarantee Uniformity */
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .cuisine-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 12px 30px rgba(166, 138, 86, 0.12);
+    }
+
+    .cuisine-card-img-wrapper {
+      width: 100%;
+      height: 220px; /* Exact Height for Images */
+      overflow: hidden;
+      position: relative;
+    }
+
+    .cuisine-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+      filter: brightness(0.85) contrast(1.1);
+    }
+
+    .cuisine-card:hover .cuisine-card-img {
+      transform: scale(1.08);
+    }
+
+    .cuisine-card-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background-color: rgba(12, 12, 12, 0.85);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 0.3rem 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 4px;
+      z-index: 2;
+    }
+
+    .cuisine-card-fav {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: #fff;
+      font-size: 1.2rem;
+      z-index: 2;
+      transition: var(--transition);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .cuisine-card-fav:hover {
+      color: var(--gold);
+      transform: scale(1.1);
+    }
+
+    .cuisine-card-fav.favorited i {
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .cuisine-card-body {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cuisine-card-title {
+      font-family: 'Chalga', var(--font-serif);
+      font-size: 1.6rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      /* Clamp title to single line */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cuisine-card-desc {
+      font-size: 0.88rem;
+      color: #777;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      /* Clamp description to 3 lines exactly */
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 4.5em; /* Fallback for older browsers */
+    }
+
+    .cuisine-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      min-height: 3.5rem;
+    }
+
+    .cuisine-card-price {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* Standard Interactive Button */
+    .cuisine-add-btn {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--white);
+      border: 1px solid var(--gold);
+      background-color: transparent;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .cuisine-add-btn:hover {
+      background-color: var(--gold);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(166, 138, 86, 0.2);
+    }
+
+    /* Morphing Quantity Selector Design */
+    .qty-selector {
+      display: flex;
+      align-items: center;
+      background-color: rgba(166, 138, 86, 0.15);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      overflow: hidden;
+      height: 2.2rem;
+    }
+
+    .qty-btn {
+      width: 2.2rem;
+      height: 100%;
+      background: transparent;
+      border: none;
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .qty-btn:hover {
+      background-color: var(--gold);
+      color: var(--white);
+    }
+
+    .qty-val {
+      padding: 0 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--white);
+      min-width: 2.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Full Navigation Bar -->
+  <nav class="hero-nav scrolled-nav" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 2rem 4rem; background: #0c0c0c;">
+    <div class="nav-left">
+      <div class="nav-logo" style="transform: scale(0.65); transform-origin: left center;">
+        <span class="nav-logo-top">The Fifth</span>
+        <span class="nav-logo-bottom">SPICE</span>
+        <div class="nav-logo-scan-line"></div>
+      </div>
+    </div>
+    <ul class="nav-right">
+      <li><a href="index.html" class="strikethrough-link">HOME</a></li>
+      <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-menu">MENU</a></li>
+      <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-bookings">BOOKINGS</a></li>
+      <li><a href="about.html" class="strikethrough-link">ABOUT</a></li>
+      <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-cart">CART(<span class="cartCountDisplay">0</span>)</a></li>
+      <li><a href="#" class="strikethrough-link hero-side-trigger" data-target="tab-fav">FAV(<span class="favoritesCountDisplay">0</span>)</a></li>
+      <li><a href="login.html" class="strikethrough-link" id="loginBtn">LOGIN</a></li>
+    </ul>
+  </nav>
+
+  <!-- Full Screen Sliding Menu Panel (Copied for seamless drawer feature) -->
+  <div id="fullScreenMenu" class="full-screen-menu">
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+    <div class="menu-panel" id="menuPanel">
+      <div class="menu-left-half">
+        <div class="menu-nav-top">
+          <button id="closeFullMenu" class="close-menu-btn">CLOSE</button>
+          <ul class="nav-right menu-nav-right" id="sideMenuNav">
+            <li><a href="#" class="strikethrough-link active-strike side-tab-btn" data-target="tab-menu">MENU</a></li>
+            <li><a href="#" class="strikethrough-link side-tab-btn" data-target="tab-bookings">BOOKINGS</a></li>
+            <li><a href="#" class="strikethrough-link side-tab-btn" data-target="tab-cart">CART(<span class="cartCountDisplay">0</span>)</a></li>
+            <li><a href="#" class="strikethrough-link side-tab-btn" data-target="tab-fav">FAV(<span class="favoritesCountDisplay">0</span>)</a></li>
+          </ul>
+        </div>
+        
+        <div class="side-tabs-container">
+          <!-- MENU TAB -->
+          <div id="tab-menu" class="side-tab-content" style="display:block;">
+            <h2 class="giant-menu-text">Menu</h2>
+            <div class="menu-items-container">
+              <h3 class="menu-category">BURGERS</h3>
+              <ul class="menu-list">
+                <li class="menu-item-line"><div class="menu-item-header"><span class="item-name">DOUBLE CHEESE</span><span class="item-dots"></span><span class="item-price">7.80</span></div><div class="menu-item-desc">Double steak patty, double American cheese, relish, mustard and gherkins.</div></li>
+                <li class="menu-item-line"><div class="menu-item-header"><span class="item-name">BIG CHEESE</span><span class="item-dots"></span><span class="item-price">9.50</span></div><div class="menu-item-desc">Double steak patty, double American cheese, Swiss and Monterey jack cheese, baconnaise top and bottom.</div></li>
+                <li class="menu-item-line"><div class="menu-item-header"><span class="item-name">THE BIG G</span><span class="item-dots"></span><span class="item-price">10.50</span></div><div class="menu-item-desc">Double steak patty, double American cheese, house made garlic mayo, sweet pickled red onions and iceberg lettuce.</div></li>
+              </ul>
+              <h3 class="menu-category" style="margin-top: 2rem;">MAINS</h3>
+              <div class="menu-see-more-container" style="margin-top: 3rem; text-align: center; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 2rem;">
+                <a href="cuisines.html" class="btn btn-gold" style="display: inline-block; width: 100%;">See More</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOOKINGS TAB -->
+          <div id="tab-bookings" class="side-tab-content" style="display:none;">
+            <h2 class="giant-menu-text">Bookings</h2>
+            <div class="menu-items-container">
+              <form id="ReservationForm" autocomplete="off" class="dark-form">
+                <div class="form-row">
+                  <div class="form-group"><input type="text" placeholder="Your name" required></div>
+                  <div class="form-group"><input type="email" placeholder="Your Email" required></div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><input type="tel" placeholder="Phone Number" required></div>
+                  <div class="form-group">
+                    <select required>
+                      <option value="" disabled selected>Select number of guests</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group"><input type="date" required></div>
+                  <div class="form-group"><input type="time" required></div>
+                </div>
+                <button type="submit" class="btn btn-gold w-100">Make Reservation</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- CART TAB -->
+          <div id="tab-cart" class="side-tab-content" style="display:none;">
+            <h2 class="giant-menu-text">Cart</h2>
+            <div class="menu-items-container" style="width: 100%; max-width: 600px; margin: 0 auto;">
+              
+              <!-- Step 1: Cart Items -->
+              <div id="cart-step-items" class="cart-step active-step">
+                <div id="cartItems" class="cart-items" style="max-height: 40vh; overflow-y: auto; padding-right: 1rem;"></div>
+                <div class="cart-footer" style="padding-top: 2rem; margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                  <div class="cart-total-row" style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; font-family: var(--font-mono); font-size: 1.2rem;">
+                    <span>Total:</span>
+                    <span style="color:var(--gold);">₹<span id="cartTotal">0.00</span></span>
+                  </div>
+                  <button class="btn btn-gold w-100" id="btn-proceed-checkout">Proceed To Checkout</button>
+                </div>
+              </div>
+
+              <!-- Step 2: Checkout Details -->
+              <div id="cart-step-checkout" class="cart-step" style="display:none;">
+                <h3 style="font-family: var(--font-serif); margin-bottom: 1.5rem;">Delivery Details</h3>
+                <form id="checkoutForm" class="dark-form">
+                  <div class="form-group"><input type="text" id="checkoutName" placeholder="Full Name" required></div>
+                  <div class="form-group"><textarea id="checkoutAddress" placeholder="Delivery Address" rows="3" required></textarea></div>
+                  <div class="form-group"><input type="tel" id="checkoutPhone" placeholder="Phone Number" required></div>
+                  <button type="submit" class="btn btn-gold w-100">Continue to Payment</button>
+                  <button type="button" class="btn btn-outline w-100" id="btn-back-cart" style="margin-top: 1rem;">Back to Cart</button>
+                </form>
+              </div>
+
+              <!-- Step 3: Payment -->
+              <div id="cart-step-payment" class="cart-step" style="display:none;">
+                <h3 style="font-family: var(--font-serif); margin-bottom: 1.5rem;">Secure Payment</h3>
+                <div class="credit-card-mockup" style="background: #222; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #333;">
+                  <div style="font-family: var(--font-mono); color: #ccc; margin-bottom: 1rem;">CARD DETAILS</div>
+                  <input type="text" placeholder="Card Number (e.g. 4111...)" class="w-100" style="background: #111; color: white; border: 1px solid #444; padding: 0.8rem; margin-bottom: 0.5rem;" required>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" placeholder="MM/YY" style="background: #111; color: white; border: 1px solid #444; padding: 0.8rem; width: 50%;" required>
+                    <input type="text" placeholder="CVC" style="background: #111; color: white; border: 1px solid #444; padding: 0.8rem; width: 50%;" required>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-gold w-100" id="btn-pay-now">Pay ₹<span id="payTotal">0.00</span></button>
+                <button type="button" class="btn btn-outline w-100" id="btn-back-checkout" style="margin-top: 1rem;">Back to Details</button>
+              </div>
+
+              <!-- Step 4: Processing -->
+              <div id="cart-step-processing" class="cart-step" style="display:none; text-align: center; padding: 3rem 0;">
+                <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--gold); margin-bottom: 1.5rem;"></i>
+                <h3 style="font-family: var(--font-serif);">Processing Payment...</h3>
+                <p style="color: #888;">Please do not close this window.</p>
+              </div>
+
+              <!-- Step 5: Success & Invoice -->
+              <div id="cart-step-success" class="cart-step" style="display:none; text-align: center;">
+                <i class="fas fa-check-circle" style="font-size: 4rem; color: #27ae60; margin-bottom: 1rem;"></i>
+                <h2 style="font-family: 'Chalga', serif; color: var(--gold); margin-bottom: 0.5rem;">Payment Successful</h2>
+                <p style="color: #aaa; margin-bottom: 2rem;">Your order has been placed.</p>
+                
+                <div class="receipt-printer">
+                  <div class="receipt-slot"></div>
+                  <div id="invoice-content" class="receipt-paper">
+                    <div style="text-align: center; margin-bottom: 1rem; border-bottom: 1px dashed #000; padding-bottom: 1rem;">
+                      <h3 style="font-family: 'Chalga', serif; font-size: 1.5rem; margin-bottom: 0.5rem;">The Fifth Spice</h3>
+                      <p>203 Venice Blvd, CA 90291</p>
+                      <p>Invoice #<span id="invoiceNumber">10294</span></p>
+                    </div>
+                    <div id="invoice-items" style="margin-bottom: 1rem; border-bottom: 1px dashed #000; padding-bottom: 1rem;">
+                      <!-- Items injected here -->
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem;">
+                      <span>Total Paid:</span>
+                      <span>₹<span id="invoiceTotal">0.00</span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                  <button type="button" class="btn btn-outline w-100" id="btn-download-invoice"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                  <button type="button" class="btn btn-gold w-100" id="btn-track-order">Track Order <i class="fas fa-arrow-right"></i></button>
+                </div>
+              </div>
+
+              <!-- Step 6: Progression Pathway -->
+              <div id="cart-step-tracking" class="cart-step" style="display:none;">
+                <h3 style="font-family: var(--font-serif); margin-bottom: 2rem; text-align: center;">Order Status</h3>
+                
+                <div class="tracking-pathway">
+                  <div class="track-node active" id="track-node-1">
+                    <div class="track-icon"><i class="fas fa-fire"></i></div>
+                    <div class="track-text">Kitchen Preparing</div>
+                  </div>
+                  <div class="track-line" id="track-line-1"></div>
+                  <div class="track-node" id="track-node-2">
+                    <div class="track-icon"><i class="fas fa-box"></i></div>
+                    <div class="track-text">Packing Order</div>
+                  </div>
+                  <div class="track-line" id="track-line-2"></div>
+                  <div class="track-node" id="track-node-3">
+                    <div class="track-icon"><i class="fas fa-motorcycle"></i></div>
+                    <div class="track-text">Out for Delivery</div>
+                  </div>
+                  <div class="track-line" id="track-line-3"></div>
+                  <div class="track-node" id="track-node-4">
+                    <div class="track-icon"><i class="fas fa-home"></i></div>
+                    <div class="track-text">Delivered</div>
+                  </div>
+                </div>
+                
+                <button type="button" class="btn btn-outline w-100" id="btn-new-order" style="margin-top: 3rem;">Place Another Order</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- FAV TAB -->
+          <div id="tab-fav" class="side-tab-content" style="display:none;">
+            <h2 class="giant-menu-text">Favorites</h2>
+            <div class="menu-items-container" style="width: 100%;">
+              <div id="favoritesList" class="favorites-list" style="max-height: 50vh; overflow-y: auto; padding-right: 1rem;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="menu-right-half">
+        <div class="menu-image-container">
+          <img src="https://i.pinimg.com/1200x/6a/cc/f3/6accf3cefbe7f9779d151e3696018990.jpg" alt="Menu Burger" id="menuImage">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cuisines Main Area -->
+  <header class="cuisines-hero">
+    <span class="subtitle">Curated Taste Horizons</span>
+    <h1>Our Cuisines</h1>
+    <p>Journey across our masterfully crafted cuisines, made with authentic, premium ingredients and contemporary culinary art.</p>
+  </header>
+
+  <!-- Cuisine Tab Selection -->
+  <section class="cuisine-tabs-container">
+    <div class="cuisine-tabs">
+      <button class="cuisine-tab-btn active" data-cuisine="india">Indian</button>
+      <button class="cuisine-tab-btn" data-cuisine="continental">Continental</button>
+      <button class="cuisine-tab-btn" data-cuisine="french">French</button>
+      <button class="cuisine-tab-btn" data-cuisine="italian">Italian</button>
+    </div>
+  </section>
+
+  <!-- Cuisines Grid Area -->
+  <main class="cuisines-container">
+    <div class="cuisines-grid" id="cuisines-grid">
+      <!-- Dynamically filled with premium cards -->
+    </div>
+  </main>
+
+  <!-- Redesigned Premium Footer -->
+  <footer class="footer-new">
+    <div class="footer-cta-bar">
+      <div class="footer-cta-content">
+        <span class="footer-cta-sub">CULINARY MEMORIES</span>
+        <h3 class="footer-cta-title">Ready to Experience the Feast?</h3>
+      </div>
+      <a href="index.html#Reservation" class="btn btn-gold footer-cta-btn">Book Your Table</a>
+    </div>
+
+    <div class="footer-main-grid">
+      <!-- Brand Column -->
+      <div class="footer-grid-col brand-col">
+        <div class="footer-brand-logo">
+          <span class="logo-text-top">The Fifth</span>
+          <span class="logo-text-bottom">SPICE</span>
+        </div>
+        <p class="brand-editorial-text">
+          A sensory journey exploring modern gastronomy and the alchemy of five primary spices. Merging tradition with culinary avant-garde.
+        </p>
+        <div class="footer-contact-info">
+          <p><i class="fas fa-map-marker-alt"></i> 203 Venice Blvd, CA 90291, USA</p>
+          <p><i class="fas fa-phone"></i> +1 310-823-5396</p>
+          <p><i class="fas fa-envelope"></i> eat@thefifthspice.com</p>
+        </div>
+      </div>
+
+      <!-- Operating Hours Column -->
+      <div class="footer-grid-col hours-col">
+        <h4 class="col-heading">Operational Hours</h4>
+        <ul class="hours-list">
+          <li><span class="day">Monday - Thursday</span><span class="divider-dots"></span><span class="time">17:00 - 23:00</span></li>
+          <li><span class="day">Friday - Saturday</span><span class="divider-dots"></span><span class="time">16:00 - 00:00</span></li>
+          <li><span class="day">Sunday Brunch</span><span class="divider-dots"></span><span class="time">11:00 - 16:00</span></li>
+          <li><span class="day">Sunday Dinner</span><span class="divider-dots"></span><span class="time">Closed</span></li>
+        </ul>
+      </div>
+
+      <!-- Explore Links Column -->
+      <div class="footer-grid-col links-col">
+        <h4 class="col-heading">Navigate</h4>
+        <ul class="explore-links">
+          <li><a href="index.html" class="footer-link"><i class="fas fa-chevron-right"></i> Home Lounge</a></li>
+          <li><a href="cuisines.html" class="footer-link"><i class="fas fa-chevron-right"></i> Taste Cuisines</a></li>
+          <li><a href="about.html" class="footer-link"><i class="fas fa-chevron-right"></i> Our Legacy</a></li>
+          <li><a href="login.html" class="footer-link"><i class="fas fa-chevron-right"></i> Member Access</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter Column -->
+      <div class="footer-grid-col newsletter-col">
+        <h4 class="col-heading">The Newsletter</h4>
+        <p class="newsletter-sub-text">Join our gastronomic inner circle for secret recipes, exclusive wine tastings, and seasonal events.</p>
+        <form class="footer-newsletter-form" id="footerNewsletterForm">
+          <div class="input-wrapper">
+            <input type="email" placeholder="Enter your email" required autocomplete="email">
+            <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </form>
+        <div class="footer-social-wrapper">
+          <span class="social-label">Follow Us</span>
+          <div class="footer-social-links">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Massive Brand Mark Backdrop -->
+    <div class="footer-backdrop-mark">THE FIFTH SPICE</div>
+
+    <div class="footer-bottom-bar">
+      <p class="copyright-text">&copy; 2026 The Fifth Spice. Crafted for culinary perfection.</p>
+      <div class="footer-legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Sitemap</a>
+      </div>
+      <button class="scroll-to-top-btn" id="btnScrollToTop" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+      </button>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Premium Dishes Dataset (12 per cuisine = 48 total)
+    const dishesData = {
+      india: [
+        { name: "Butter Chicken", price: 380, desc: "Tender tandoor-grilled chicken slow-cooked in a rich, buttery tomato sauce with cream and aromatic herbs.", image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" },
+        { name: "Paneer Selgari", price: 320, desc: "A luxury preparation of home-made cottage cheese simmered in a spiced cashew-nut butter gravy with dried fenugreek.", image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=600&q=80" },
+        { name: "Lamb Biryani", price: 460, desc: "Aromatic Basmati rice layered with succulent spiced lamb, infused with saffron, caramelized onions, and fresh mint.", image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=600&q=80" },
+        { name: "Dal Makhani", price: 260, desc: "Creamy, slow-cooked black lentils simmered overnight on charcoal with butter, cream, tomatoes, and garlic.", image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80" },
+        { name: "Garlic Naan Basket", price: 120, desc: "Clay-oven baked leavened flatbread brushed with organic garlic, fresh cilantro, and clarified butter.", image: "https://images.unsplash.com/photo-1601356616077-695728ecf769?auto=format&fit=crop&w=600&q=80" },
+        { name: "Tandoori Chicken", price: 340, desc: "Classic fire-grilled chicken marinated in spiced yogurt, ginger-garlic, mustard oil, and kashmiri red chilies.", image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=600&q=80" },
+        { name: "Samosa Chaat", price: 180, desc: "Crispy fried pastries filled with potato, layered with yogurt, tangy tamarind chutney, spicy mint, and sev.", image: "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80" },
+        { name: "Malai Kofta", price: 310, desc: "Soft potato and paneer dumplings stuffed with dry fruits, served in an exquisite, creamy mild-golden gravy.", image: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=600&q=80" },
+        { name: "Chole Bhature Deluxe", price: 220, desc: "Spiced chickpea curry cooked with dark tea leaves and spices, served with puffy, golden fried flatbread.", image: "https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=600&q=80" },
+        { name: "Coastal Prawn Masala", price: 440, desc: "Tiger prawns cooked in coconut milk, tempering mustard seeds, curry leaves, and a kick of southern spices.", image: "https://images.unsplash.com/photo-1559561853-08026f7fd252?auto=format&fit=crop&w=600&q=80" },
+        { name: "Palak Paneer", price: 290, desc: "Cottage cheese squares tossed in a smooth, vibrant spinach puree tempered with green chilies, garlic and cream.", image: "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80" },
+        { name: "Saffron Rasmalai", price: 160, desc: "Delicate cottage cheese patties soaked in thickened sweet milk, topped with saffron, almonds, and pistachios.", image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80" }
+      ],
+      continental: [
+        { name: "Grilled Ribeye Steak", price: 780, desc: "Prime aged beef ribeye chargrilled to perfection, served with truffle-herb compound butter and rosemary baby potatoes.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80" },
+        { name: "Wild Mushroom Risotto", price: 490, desc: "Creamy Arborio rice slowly simmered with porcini, shiitake, and button mushrooms, drizzled with white truffle oil.", image: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=600&q=80" },
+        { name: "Pan-Seared Salmon", price: 680, desc: "Atlantic salmon fillet seared with crispy skin, resting on grilled asparagus and coated in a white wine lemon-dill cream.", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80" },
+        { name: "Chicken Cordon Bleu", price: 440, desc: "Breaded chicken breast wrapped around smoked ham and swiss gruyère cheese, golden-fried and served with velouté.", image: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=600&q=80" },
+        { name: "Roasted Rack of Lamb", price: 820, desc: "Herb-crusted rack of lamb slow-roasted, accompanied by charred seasonal vegetables and rich red wine jus.", image: "https://images.unsplash.com/photo-1514516345957-556ca7d90a29?auto=format&fit=crop&w=600&q=80" },
+        { name: "Spinach Ricotta Ravioli", price: 420, desc: "Handmade pasta parcels stuffed with ricotta and baby spinach, tossed in a sage butter sauce with shaved parmigiano.", image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80" },
+        { name: "Spanish Seafood Paella", price: 690, desc: "Classic saffron-infused rice cooked with premium mussels, king prawns, calamari, chicken, and sweet bell peppers.", image: "https://images.unsplash.com/photo-1534080391025-09795d197360?auto=format&fit=crop&w=600&q=80" },
+        { name: "Eggs Benedict Royale", price: 380, desc: "Toasted English muffins topped with house-smoked salmon, perfectly poached organic eggs, and creamy hollandaise.", image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
+        { name: "Signature Caesar Salad", price: 320, desc: "Crisp romaine lettuce hearts, crispy bacon shards, house garlic croutons, loaded with shaved aged parmesan.", image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=600&q=80" },
+        { name: "Tomato Basil Soup", price: 240, desc: "Slow-roasted heirloom tomatoes blended with sweet fresh basil and extra virgin olive oil, served with toasted sourdough.", image: "https://images.unsplash.com/photo-1547592165-e1d17fed6005?auto=format&fit=crop&w=600&q=80" },
+        { name: "Grilled Lobster Tail", price: 950, desc: "Succulent Atlantic lobster tail grilled with garlic-herb butter, accompanied by charred lemon and hand-cut sea salt fries.", image: "https://images.unsplash.com/photo-1559742811-82428b5911b4?auto=format&fit=crop&w=600&q=80" },
+        { name: "Belgian Chocolate Soufflé", price: 280, desc: "Decadent warm dark chocolate soufflé with a perfectly molten, velvety liquid center, topped with gourmet vanilla bean ice cream.", image: "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=600&q=80" }
+      ],
+      french: [
+        { name: "Coq au Vin", price: 540, desc: "Classic French chicken braised slowly in dry Burgundy red wine, button mushrooms, baby onions, and pork lardons.", image: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=600&q=80" },
+        { name: "Boeuf Bourguignon", price: 620, desc: "An ancestral stew of premium beef cuts braised in red wine broth with carrots, potatoes, garlic, and fresh bouquet garni.", image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80" },
+        { name: "French Onion Soup", price: 310, desc: "Deep rich beef broth loaded with caramelized sweet onions, topped with a rustic toasted baguette and bubbling gruyère cheese.", image: "https://images.unsplash.com/photo-1620418029653-8d00f7c703b4?auto=format&fit=crop&w=600&q=80" },
+        { name: "Crispy Duck Confit", price: 740, desc: "Slow-cooked duck leg cured in sea salt, roasted to crispy skin, resting on rich golden potato sarladaise.", image: "https://images.unsplash.com/photo-1514944224746-6bba5b09e5c2?auto=format&fit=crop&w=600&q=80" },
+        { name: "Escargots de Bourgogne", price: 420, desc: "Half-dozen gourmet French land snails baked in their shells with parsley, shallots, cognac and rich garlic butter.", image: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80" },
+        { name: "Classic Ratatouille", price: 340, desc: "Beautifully sliced layers of eggplant, yellow squash, zucchini, and ripe tomatoes baked in a rich provencal herb sauce.", image: "https://images.unsplash.com/photo-1572453800999-e8d2d1589b7c?auto=format&fit=crop&w=600&q=80" },
+        { name: "Bouillabaisse Marseille", price: 720, desc: "Traditional Provençal fish stew with white fish, mussels, shrimp and scallops in an aromatic saffron-orange fennel broth.", image: "https://images.unsplash.com/photo-1534080391025-09795d197360?auto=format&fit=crop&w=600&q=80" },
+        { name: "Quiche Lorraine Classic", price: 320, desc: "Delicate buttery pastry tart filled with rich egg custard, smoked pancetta shards, nutmeg, and bubbling gruyère cheese.", image: "https://images.unsplash.com/photo-1626200419199-391ae4be7e41?auto=format&fit=crop&w=600&q=80" },
+        { name: "Salade Niçoise Royale", price: 390, desc: "Fresh seared ahi tuna, tender green beans, hard-boiled farm eggs, baby potatoes, niçoise olives and a light lemon vinaigrette.", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80" },
+        { name: "Classic Crème Brûlée", price: 260, desc: "Rich silky custard base scented with gourmet Madagascar vanilla beans, finished with a glass-like caramelized sugar crust.", image: "https://images.unsplash.com/photo-1470324161839-ce2bb6fa6bc3?auto=format&fit=crop&w=600&q=80" },
+        { name: "Caramelized Tarte Tatin", price: 290, desc: "Upside-down French apple tart where the apples are caramelized in heavy butter and sugar before baking under flaky puff pastry.", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80" },
+        { name: "French Croque Monsieur", price: 280, desc: "Gourmet grilled sandwich with thin-sliced Paris ham, gruyère cheese, and rich creamy Béchamel sauce toasted to golden perfection.", image: "https://images.unsplash.com/photo-1475090169767-40ed8d18a67d?auto=format&fit=crop&w=600&q=80" }
+      ],
+      italian: [
+        { name: "Margherita Classic Pizza", price: 340, desc: "Hand-stretched crust, sweet San Marzano tomato puree, rich fresh buffalo mozzarella, fragrant fresh basil, extra virgin olive oil.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" },
+        { name: "Spaghetti alla Carbonara", price: 420, desc: "A traditional Roman recipe using fresh bronze-die spaghetti, dry-cured pork guanciale, pecorino romano, egg yolks and freshly ground black pepper.", image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=600&q=80" },
+        { name: "Fettuccine Alfredo", price: 390, desc: "Rich, decadent flat noodles tossed in emulsion of double butter, heavy cream and authentic Parmigiano Reggiano.", image: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=600&q=80" },
+        { name: "Lasagna Classica", price: 460, desc: "Generous layers of fresh spinach pasta sheets baked with slow-braised beef Bolognese, silky Béchamel, and imported mozzarella.", image: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=80" },
+        { name: "Truffle Gnocchi", price: 490, desc: "Pillowy potato dumplings simmered in a velvet-smooth creamy black truffle butter sauce with shaved parmigiano and baby sage.", image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80" },
+        { name: "Chicken Parmigiana", price: 440, desc: "Herb-breaded pan-fried chicken breast topped with marinara sauce, fresh basil, and bubbling hot mozzarella over linguine.", image: "https://images.unsplash.com/photo-1632778149955-e80f8ceca3e8?auto=format&fit=crop&w=600&q=80" },
+        { name: "Caprese Salad", price: 290, desc: "Thick slices of ripe heirloom tomatoes, sweet buffalo mozzarella, dressed with basil pesto, extra virgin olive oil and balsamic glaze.", image: "https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?auto=format&fit=crop&w=600&q=80" },
+        { name: "Osso Buco alla Milanese", price: 790, desc: "Cross-cut veal shanks braised with vegetables, white wine and broth, served on top of a classic creamy saffron risotto.", image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80" },
+        { name: "Bruschetta al Pomodoro", price: 190, desc: "Charred country sourdough rubbed with garlic, topped with marinated roma tomatoes, extra virgin olive oil, and aged balsamic glaze.", image: "https://images.unsplash.com/photo-1572656631137-7935297eff55?auto=format&fit=crop&w=600&q=80" },
+        { name: "Seafood Linguine", price: 580, desc: "Seafood linguine tossed in a white wine garlic sauce with cherry tomatoes, clams, squid, shrimps, and mussels.", image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80" },
+        { name: "Traditional Tiramisu", price: 240, desc: "Espresso-drenched ladyfinger biscuits layered with a luxurious whipped cream of mascarpone cheese, Marsala wine, and cocoa dusting.", image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=600&q=80" },
+        { name: "Vanilla Bean Panna Cotta", price: 210, desc: "Vibrantly silky, chilled cream dessert with gourmet vanilla bean speckles, served under a sweet, wild berry coulis glaze.", image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80" }
+      ]
+    };
+
+    // Render Dishes Function to populate Grid
+    function renderCuisine(cuisineKey) {
+      const grid = document.getElementById('cuisines-grid');
+      const dishes = dishesData[cuisineKey];
+      
+      grid.innerHTML = dishes.map(dish => {
+        // Check if item already exists in local storage cart
+        const cartItem = cart.find(item => item.name === dish.name);
+        const isInCart = !!cartItem;
+        const quantity = isInCart ? (cartItem.quantity || 1) : 0;
+        
+        return `
+          <div class="cuisine-card">
+            <div>
+              <div class="cuisine-card-img-wrapper">
+                <div class="cuisine-card-badge">${cuisineKey}</div>
+                <img class="cuisine-card-img" src="${dish.image}" alt="${dish.name}" loading="lazy">
+              </div>
+              <div class="cuisine-card-body">
+                <div>
+                  <h3 class="cuisine-card-title">${dish.name}</h3>
+                  <p class="cuisine-card-desc">${dish.desc}</p>
+                </div>
+              </div>
+            </div>
+            <div style="padding: 0 1.5rem 1.5rem 1.5rem;">
+              <div class="cuisine-card-footer" data-name="${dish.name}" data-price="${dish.price}" data-image="${dish.image}">
+                ${isInCart ? `
+                  <span class="cuisine-card-price">₹${dish.price}</span>
+                  <div class="qty-selector">
+                    <button class="qty-btn" onclick="handleQtyChange('${dish.name}', -1, this)">-</button>
+                    <span class="qty-val">${quantity}</span>
+                    <button class="qty-btn" onclick="handleQtyChange('${dish.name}', 1, this)">+</button>
+                  </div>
+                ` : `
+                  <span class="cuisine-card-price">₹${dish.price}</span>
+                  <button class="cuisine-add-btn btn-gold" onclick="handleAddClick('${dish.name}', ${dish.price}, '${dish.image}', this)">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                  </button>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Smooth fade-in cards animation on load
+      if (typeof gsap !== 'undefined') {
+        gsap.fromTo('.cuisine-card', 
+          { y: 30, opacity: 0 }, 
+          { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, ease: 'power2.out' }
+        );
+      }
+    }
+
+    // Handles interactive Click on standard "Add to Cart" button
+    function handleAddClick(name, price, image, buttonEl) {
+      // Calls global addToCart in script.js which saves in localStorage
+      addToCart(name, price, image, 1);
+      
+      // Switch button inside footer with morphing quantity controls
+      const footer = buttonEl.closest('.cuisine-card-footer');
+      footer.innerHTML = `
+        <span class="cuisine-card-price">₹${price}</span>
+        <div class="qty-selector">
+          <button class="qty-btn" onclick="handleQtyChange('${name}', -1, this)">-</button>
+          <span class="qty-val">1</span>
+          <button class="qty-btn" onclick="handleQtyChange('${name}', 1, this)">+</button>
+        </div>
+      `;
+    }
+
+    // Handles interactive increment / decrement of quantity
+    function handleQtyChange(name, delta, buttonEl) {
+      const currentItem = cart.find(item => item.name === name);
+      if (!currentItem) return;
+      
+      const newQty = (currentItem.quantity || 1) + delta;
+      const footer = buttonEl.closest('.cuisine-card-footer');
+      const price = parseFloat(footer.getAttribute('data-price'));
+      const image = footer.getAttribute('data-image');
+      
+      if (newQty <= 0) {
+        removeFromCart(name);
+        footer.innerHTML = `
+          <span class="cuisine-card-price">₹${price}</span>
+          <button class="cuisine-add-btn btn-gold" onclick="handleAddClick('${name}', ${price}, '${image}', this)">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+        `;
+      } else {
+        updateCartQuantity(name, newQty);
+        const qtyValEl = footer.querySelector('.qty-val');
+        if (qtyValEl) qtyValEl.textContent = newQty;
+      }
+    }
+
+    // Initialize Page Controls
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initial render for 'Indian'
+      renderCuisine('india');
+      
+      // Tab selector click triggers
+      document.querySelectorAll('.cuisine-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.cuisine-tab-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const cuisineKey = this.getAttribute('data-cuisine');
+          renderCuisine(cuisineKey);
+        });
+      });
+      
+      // Synchronize quantities if cart drawer actions are taken
+      window.addEventListener('cartUpdated', () => {
+        const activeTab = document.querySelector('.cuisine-tab-btn.active');
+        if (activeTab) {
+          const cuisineKey = activeTab.getAttribute('data-cuisine');
+          // Re-render the active tab grid silently so quantities are updated instantly
+          const grid = document.getElementById('cuisines-grid');
+          const dishes = dishesData[cuisineKey];
+          
+          dishes.forEach((dish, index) => {
+            const footer = document.querySelectorAll('.cuisine-card-footer')[index];
+            if (!footer) return;
+            const name = dish.name;
+            const cartItem = cart.find(item => item.name === name);
+            const isInCart = !!cartItem;
+            const quantity = isInCart ? (cartItem.quantity || 1) : 0;
+            
+            if (isInCart) {
+              footer.innerHTML = `
+                <span class="cuisine-card-price">₹${dish.price}</span>
+                <div class="qty-selector">
+                  <button class="qty-btn" onclick="handleQtyChange('${dish.name}', -1, this)">-</button>
+                  <span class="qty-val">${quantity}</span>
+                  <button class="qty-btn" onclick="handleQtyChange('${dish.name}', 1, this)">+</button>
+                </div>
+              `;
+            } else {
+              footer.innerHTML = `
+                <span class="cuisine-card-price">₹${dish.price}</span>
+                <button class="cuisine-add-btn btn-gold" onclick="handleAddClick('${dish.name}', ${dish.price}, '${dish.image}', this)">
+                  <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+              `;
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
